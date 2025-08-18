@@ -109,7 +109,7 @@ export default function ChatBotPage() {
   };
 
   return (
-    <div className="min-h-screen max-w-[80%] mx-auto flex">
+    <div className="min-h-screen  max-w-[95%] md:max-w-[80%] mx-auto flex">
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
@@ -133,9 +133,11 @@ export default function ChatBotPage() {
             <SignedIn>
               <UserButton />
             </SignedIn>
-            <Button className="relative z-10" onClick={() => setOpen(!open)}>
+            <div className="hidden md:block">
+              <Button className="relative z-10" onClick={() => setOpen(!open)}>
               ☰ Menu
             </Button>
+            </div>
              <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
@@ -160,8 +162,8 @@ export default function ChatBotPage() {
         </div>
 
         {/* Chat Content */}
-        <div className="flex-1 px-6 py-6 container mx-auto">
-          <h2 className="text-2xl font-semibold  mb-6">
+        <div className="flex-1 md:px-6 py-3 md:container md:mx-auto">
+          <h2 className="text-2xl text-center font-semibold  mb-6">
             Chat with our AI assistant
           </h2>
 
@@ -170,7 +172,7 @@ export default function ChatBotPage() {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex items-start gap-3 ${
+                className={`flex items-start gap-2 ${
                   message.sender === "user" ? "flex-row-reverse" : ""
                 }`}
               >
@@ -202,7 +204,8 @@ export default function ChatBotPage() {
                     {message.sender === "bot" ? "AI Assistant" : user?.fullName}
                   </div>
                   <div
-                    className={`inline-block px-4 py-2 rounded-lg max-w-md ${
+                    className={`inline-block px-4 py-2
+                      mb-16 rounded-lg max-w-md ${
                       message.sender === "bot"
                         ? "bg-gray-100 text-gray-900"
                         : "bg-blue-500 text-white"
@@ -216,20 +219,15 @@ export default function ChatBotPage() {
           </div>
 
           {/* Message Input */}
-          <div className="flex items-center gap-2  rounded-lg border  p-2 sticky bottom-0">
+          <div className="flex items-center gap-2  rounded-lg border  p-2 fixed w-[80%] bottom-4 ">
             <Input
               placeholder="Type your message..."
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              className="flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-2xl"
+              className="flex-1 border-0 focus-visible:ring-0 focus-visible:ring-offset-0  md:text-3xl"
             />
-            <Button variant="ghost" size="icon">
-              <Paperclip className="w-5 h-5 text-gray-500" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Mic className="w-5 h-5 text-gray-500" />
-            </Button>
+           
             <Button
               onClick={handleSendMessage}
               size="icon"
