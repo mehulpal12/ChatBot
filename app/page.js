@@ -80,7 +80,7 @@ export default function IntroPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto py-4 flex items-center justify-between">
+        <div className="container px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
               <Bot className="w-6 h-6 text-primary-foreground" />
@@ -102,7 +102,7 @@ export default function IntroPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-6">
+      <section className="md:py-20 py-8 px-6">
         <div className="container mx-auto max-w-4xl text-center">
           <Badge variant="secondary" className="mb-6">
             <Sparkles className="w-4 h-4 mr-2" />
@@ -156,7 +156,7 @@ export default function IntroPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-6 bg-muted/30">
+      <section className="md:py-20 py-8 px-6 bg-muted/30">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-foreground mb-4">Why Choose Our AI Assistant?</h2>
@@ -165,7 +165,7 @@ export default function IntroPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 gap-2">
             {features.map((feature, index) => (
               <Card key={index} className="border-border hover:shadow-lg transition-shadow duration-300">
                 <CardHeader className="pb-4">
@@ -182,7 +182,7 @@ export default function IntroPage() {
       </section>
 
       {/* Use Cases Section */}
-      <section className="py-20 px-6">
+      <section className="md:py-20  px-6">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-4xl font-bold text-foreground mb-4">Perfect for Every Task</h2>
           <p className="text-xl text-muted-foreground mb-12">
