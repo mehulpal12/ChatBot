@@ -11,11 +11,11 @@ export default function ChatMessage({ content }: { content: string }) {
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        code({ inline, className, children }) {
+        code({  className, children }) {
           const match = /language-(\w+)/.exec(className || "");
           const codeString = String(children).replace(/\n$/, "");
 
-          if (!inline && match) {
+          if ( match) {
             return <CodeBlock language={match[1]} value={codeString} />;
           }
 

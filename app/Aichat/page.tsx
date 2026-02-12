@@ -37,6 +37,7 @@ import {
 import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
 import ChatMessage from "./ChatMessage";
+import ClientUserButton from "@/components/ClientUserButton";
 
 interface Message {
   id: string;
@@ -60,7 +61,7 @@ export default function ChatBotPage() {
   const handleSendMessage = async () => {
     if (inputMessage.trim()) {
       const newMessage: Message = {
-        id: Date.now().toString(),
+        id:  crypto.randomUUID(),
         content: inputMessage,
         sender: "user",
         timestamp: new Date(),
@@ -129,7 +130,7 @@ export default function ChatBotPage() {
               </SignUpButton>
             </SignedOut> */}
             <SignedIn>
-              <UserButton />
+              <ClientUserButton/>
             </SignedIn>
             <div className="hidden md:block">
               <Button className="relative z-10" onClick={() => setOpen(!open)}>
