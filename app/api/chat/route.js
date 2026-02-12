@@ -10,7 +10,7 @@ export async function POST(request) {
 
 
     const completion = await groqai.chat.completions.create({
-      model: "llama3-8b-8192",
+      model: "llama-3.1-8b-instant",
       messages: [{ role: "user", content: question[0].content }],
     });
     // console.log(completion.choices[0].message.content);
