@@ -262,11 +262,11 @@ export default function IntroPage() {
           </div>
 
           <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 ChatBot AI. All rights reserved. Built with advanced AI technology.
+            <div> <p> &copy; 2024 ChatBot AI. All rights reserved. Built with advanced AI technology. </p>
               <br />
               All trademarks and copyrights are the property of their respective owners.
               <h1>Mehul Pal</h1>
-            </p>
+            </div>
           </div>
         </div>
       </footer>
