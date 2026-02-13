@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,7 @@ import {
 import Link from "next/link";
 import { useClerk } from "@clerk/nextjs";
 import ChatMessage from "./ChatMessage";
+import ClientUserButton from "@/components/ClientUserButton";
 
 interface Message {
   id: string;
@@ -54,49 +55,83 @@ export default function ChatBotPage() {
   const { setTheme } = useTheme();
 
   const [inputMessage, setInputMessage] = useState("");
-  const [response, setResponse] = useState("");
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    const loadChatHistory = async () => {
+      try {
+        const response = await fetch("/api/chat"); // This calls your GET route
+        const data = await response.json();
+
+        // Transform DB data (userMessage/aiResponse) into your UI format (sender/content)
+        const formattedMessages = data
+          .map((chat: any) => [
+            {
+              id: chat._id + "-user",
+              content: chat.userMessage,
+              sender: "user",
+              timestamp: new Date(chat.createdAt),
+            },
+            {
+              id: chat._id + "-ai",
+              content: chat.aiResponse,
+              sender: "bot",
+              timestamp: new Date(chat.createdAt),
+            },
+          ])
+          .flat();
+
+        setMessages(formattedMessages);
+        console.log(formattedMessages);
+      } catch (error) {
+        console.error("Failed to load history:", error);
+      }
+    };
+
+    loadChatHistory();
+  }, []);
+
   const handleSendMessage = async () => {
-    if (inputMessage.trim()) {
-      const newMessage: Message = {
-        id: Date.now().toString(),
-        content: inputMessage,
-        sender: "user",
+    if (!inputMessage.trim()) return;
+
+    // 1. Create and show User Message immediately
+    const userMsg: Message = {
+      id: crypto.randomUUID(),
+      content: inputMessage,
+      sender: "user",
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    const currentInput = inputMessage; // Store it before clearing
+    setInputMessage("");
+
+    try {
+      // 2. Fetch from API
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: [{ role: "user", content: currentInput }],
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch");
+
+      const data = await response.json();
+
+      // 3. Add AI Response immediately (No setTimeout needed!)
+      const botResponse: Message = {
+        id: crypto.randomUUID(),
+        content: data.response, // Uses the actual answer from Groq/DB
+        sender: "bot",
         timestamp: new Date(),
       };
 
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          question: [{ role: "user", content: inputMessage }],
-        }),
-      });
-      if (!response.ok) {
-        console.error("Error:", response.statusText);
-      }
-      setMessages([...messages, newMessage]);
-      setInputMessage("");
-      const data = await response.json();
-
-      // Simulate bot response
-      setTimeout(async () => {
-        const botResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          content:
-            data.response || "This is a simulated response from the bot.",
-          sender: "bot",
-          timestamp: new Date(),
-        };
-        // console.log(response);
-
-        // console.log(JSON.stringify(botResponse, null, 2) + " this is response");
-
-        setMessages((prev) => [...prev, botResponse]);
-      }, 2000);
+      setMessages((prev) => [...prev, botResponse]);
+    } catch (error) {
+      console.error("Chat Error:", error);
+      // Optional: Add an error message bubble for the user
     }
   };
 
@@ -129,7 +164,7 @@ export default function ChatBotPage() {
               </SignUpButton>
             </SignedOut> */}
             <SignedIn>
-              <UserButton />
+              <ClientUserButton />
             </SignedIn>
             <div className="hidden md:block">
               <Button className="relative z-10" onClick={() => setOpen(!open)}>
@@ -298,7 +333,8 @@ export default function ChatBotPage() {
               <HelpCircle className="w-5 h-5 text-gray-500" />
               <span className="text-gray-700">
                 {" "}
-                <Button asChild
+                <Button
+                  asChild
                   onClick={() => signOut({ redirectUrl: "/" })}
                   className=""
                 >
