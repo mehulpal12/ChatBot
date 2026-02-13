@@ -9,26 +9,29 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 export default function ChatMessage({ content }: { content: string }) {
   return (
     <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      components={{
-        code({  className, children }) {
-          const match = /language-(\w+)/.exec(className || "");
-          const codeString = String(children).replace(/\n$/, "");
-
-          if ( match) {
-            return <CodeBlock language={match[1]} value={codeString} />;
-          }
-
-          return (
-            <code className="bg-gray-200 px-1 rounded text-sm">
-              {children}
-            </code>
-          );
-        },
-      }}
-    >
-      {content}
-    </ReactMarkdown>
+  remarkPlugins={[remarkGfm]}
+  components={{
+    code({node, inline, className, children, ...props}: any) {
+      const match = /language-(\w+)/.exec(className || '')
+      return !inline && match ? (
+        <SyntaxHighlighter
+          style={oneDark}
+          language={match[1]}
+          PreTag="div"
+          {...props}
+        >
+          {String(children).replace(/\n$/, '')}
+        </SyntaxHighlighter>
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      )
+    }
+  }}
+>
+  {content}
+</ReactMarkdown>
   );
 }
 
